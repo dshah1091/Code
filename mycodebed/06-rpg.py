@@ -18,7 +18,7 @@ def showStatus():
     print('---------------------------')
     print('You are in the ' + currentRoom)
     #print the current inventory
-    print('inventory: ' + str(invetory))
+    print('inventory: ' + str(inventory))
     #print an item if there is one
     if "item" in rooms[currentRoom]:
         print('You see a ' + rooms[currentRoom]['item'])
@@ -30,10 +30,22 @@ inventory = []
 #a dictionary linking a room to other rooms
 rooms ={
             'Hall': {
-                'south': 'Kitchen'
+                'south': 'Kitchen',
+                'east' : 'dining room',
+                'item' : 'key'
+            },
+            'dining room' :{
+                'west' : 'Hall',
+                'south' : 'garden',
+                'item' : 'potion'
             },
             'Kitchen' : {
-                 'north' : 'Hall'
+                 'north' : 'Hall',
+                 'item' : 'monster'
+            },
+            'garden' : {
+                'north': 'dining room',
+                'west': 'Kitchen'
             }
 
 }
@@ -68,7 +80,7 @@ while True:
     #if they type 'get' first
     if move[0] == 'get' :
         #if the room contains an item, and the item is the one they want to get
-        if 'item' in rooms[currentRoom] and move[1] is rooms[currentRoom]['item']:
+        if 'item' in rooms[currentRoom] and move[1] in rooms[currentRoom]['item']:
             #add the item to their inventory
             inventory += [move[1]]
             #display a helpful message
@@ -78,4 +90,13 @@ while True:
         #otherwise, if the item isn't there get
         else:
             #tell them they can't get it
-            print('Can\'t get' + move[1]+ '!')
+            print('Can\'t get ' + move[1]+ '!')
+
+    #if a player enters a room with a monster
+    if 'item' in rooms[currentRoom] and 'monster' in rooms[currentRoom]['item']:
+        print('A monster has got you... GAME OVER')
+        break
+
+    if currentRoom == 'garden' and 'key' in inventory and 'potion' in inventory:
+        print('You escaped the house with the ultra rare key and magic potion...YOU WIN!')
+        break
